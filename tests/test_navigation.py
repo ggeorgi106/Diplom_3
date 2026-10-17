@@ -1,9 +1,6 @@
 import allure
 
-from selenium.webdriver.support.ui import WebDriverWait
-
 from pages.main_page import MainPage
-from urls import BASE_URL
 
 
 @allure.feature("Навигация")
@@ -16,11 +13,7 @@ class TestNavigation:
         main_page.open_main_page()
         main_page.click_order_feed()
 
-        WebDriverWait(driver, 10).until(
-            lambda browser: "/feed" in browser.current_url
-        )
-
-        assert "/feed" in driver.current_url
+        assert main_page.is_order_feed_opened()
 
     @allure.title("Переход в раздел Конструктор")
     def test_go_to_constructor(self, driver):
@@ -28,16 +21,7 @@ class TestNavigation:
 
         main_page.open_main_page()
         main_page.click_order_feed()
-
-        WebDriverWait(driver, 10).until(
-            lambda browser: "/feed" in browser.current_url
-        )
-
+        main_page.is_order_feed_opened()
         main_page.click_constructor()
 
-        WebDriverWait(driver, 10).until(
-            lambda browser: browser.current_url.rstrip("/")
-            == BASE_URL.rstrip("/")
-        )
-
-        assert driver.current_url.rstrip("/") == BASE_URL.rstrip("/")
+        assert main_page.is_constructor_opened()

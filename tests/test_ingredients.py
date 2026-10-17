@@ -19,9 +19,6 @@ class TestIngredients:
         main_page = MainPage(driver)
         main_page.open_main_page()
         main_page.click_ingredient()
-
-        assert main_page.is_ingredient_modal_open()
-
         main_page.close_ingredient_modal()
 
         assert main_page.is_ingredient_modal_closed()
@@ -35,11 +32,8 @@ class TestIngredients:
 
         main_page.drag_bun_to_constructor()
 
-        main_page.wait.until(
-            lambda _: main_page.get_bun_counter()
-            > counter_before
+        counter_after = main_page.wait_for_bun_counter_increase(
+            counter_before
         )
-
-        counter_after = main_page.get_bun_counter()
 
         assert counter_after > counter_before

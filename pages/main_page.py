@@ -21,6 +21,17 @@ class MainPage(BasePage):
             MainPageLocators.ORDER_FEED_BUTTON
         )
 
+    def is_order_feed_opened(self):
+        return self.wait.until(
+            EC.url_contains("/feed")
+        )
+
+    def is_constructor_opened(self):
+        return self.wait.until(
+            lambda driver: driver.current_url.rstrip("/")
+            == BASE_URL.rstrip("/")
+        )
+
     def click_ingredient(self):
         self.click_element(
             IngredientLocators.BUN
@@ -47,14 +58,17 @@ class MainPage(BasePage):
         elements = self.driver.find_elements(
             *IngredientLocators.BUN_COUNTER
         )
+
         if not elements:
             return 0
+
         return int(elements[0].text)
 
     def drag_bun_to_constructor(self):
         bun = self.find_element(
             IngredientLocators.BUN
         )
+
         constructor = self.find_element(
             IngredientLocators.BURGER_CONSTRUCTOR
         )
@@ -62,3 +76,13 @@ class MainPage(BasePage):
         ActionChains(self.driver).drag_and_drop(
             bun, constructor
         ).perform()
+
+    def wait_for_bun_counter_increase(self, counter_before):
+        return self.wait.until(
+            lambda _: (
+                counter_after
+                if (counter_after := self.get_bun_counter())
+                > counter_before
+                else False
+            )
+        )
