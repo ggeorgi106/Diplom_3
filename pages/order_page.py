@@ -1,7 +1,6 @@
 import allure
 
 from selenium.webdriver.common.action_chains import ActionChains
-from selenium.webdriver.support import expected_conditions as EC
 
 from pages.base_page import BasePage
 from locators import OrderPageLocators
@@ -53,11 +52,14 @@ class OrderPage(BasePage):
         )
 
     def _get_valid_order_number(self):
-        element = self.driver.find_element(
+        elements = self.driver.find_elements(
             *OrderPageLocators.ORDER_NUMBER
         )
 
-        number = element.text.strip()
+        if not elements:
+            return False
+
+        number = elements[0].text.strip()
 
         if number.isdigit() and int(number) > 0:
             return number
